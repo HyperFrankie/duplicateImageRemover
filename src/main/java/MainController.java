@@ -1,7 +1,9 @@
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -29,7 +31,8 @@ public class MainController {
 
                 alert.showAndWait();
             } else {
-                fileTree.setRoot(getNodesForDirectory(choice));
+                TreeItem<String> root = new TreeItem<String>(choice.getName());
+                fileTree.setRoot(setNodesForDirectory(root, choice));
             }
         });
         b.setTop(c);
@@ -39,15 +42,19 @@ public class MainController {
         mainStage.show();
     }
 
-    public CheckBoxTreeItem<String> getNodesForDirectory(File directory) {
-        CheckBoxTreeItem<String> root = new CheckBoxTreeItem<>(directory.getName());
+    public TreeItem<String> setNodesForDirectory(TreeItem<String> root, File directory) {
         for(File f : directory.listFiles()) {
             System.out.println("Loading " + f.getName());
-            if(f.isDirectory()) { //Then we call the function recursively
-                root.getChildren().add(getNodesForDirectory(f));
-            } else {
-                root.getChildren().add(new CheckBoxTreeItem(f.getName()));
-            }
+//            if(f.isDirectory()) {
+//                root.getChildren().add(getNodesForDirectory(f));
+//            } else {
+//                root.getChildren().add(new TreeItem(f.getName()));
+//            }
+            TreeItem<String> item = new TreeItem(f.getName());
+            item.addEventHandler(MouseEvent.ANY, e -> {
+
+            });
+            root.getChildren().add(item);
         }
         return root;
     }
